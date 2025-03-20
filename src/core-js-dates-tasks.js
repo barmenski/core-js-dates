@@ -99,8 +99,14 @@ function getNextFriday(date) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const nDate = new Date(year, month - 1);
+  let iter = 0;
+  while (nDate.getMonth() <= month - 1) {
+    nDate.setDate(nDate.getDate() + 1);
+    iter += 1;
+  }
+  return iter;
 }
 
 /**
@@ -114,8 +120,11 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const dateS = new Date(dateStart);
+  const dateE = new Date(dateEnd);
+  const delta = Math.round((dateE - dateS) / 86400000) + 1;
+  return delta;
 }
 
 /**
@@ -135,8 +144,14 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const nDate = new Date(date);
+  const sDate = new Date(period.start);
+  const eDate = new Date(period.end);
+  if (nDate >= sDate && nDate <= eDate) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -150,8 +165,21 @@ function isDateInPeriod(/* date, period */) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const time = new Date(date);
+  const year = time.getUTCFullYear();
+  const month = time.getUTCMonth() + 1;
+  const day = time.getUTCDate();
+  const hour = time.getUTCHours();
+  const minute = time.getUTCMinutes();
+  const second = time.getUTCSeconds();
+  let temp = `${month}/${day}/${year}, `;
+  temp += hour > 12 ? hour - 12 : hour;
+  if (hour === 0) temp = '12';
+  temp += (minute < 10 ? ':0' : ':') + minute;
+  temp += (second < 10 ? ':0' : ':') + second;
+  temp += hour >= 12 ? ' PM' : ' AM';
+  return temp;
 }
 
 /**
